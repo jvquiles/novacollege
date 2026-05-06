@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Novacollege.Business/Novacollege.Business.csproj" />
+  <Project Path="Novacollege.Data/Novacollege.Data.csproj" />
+  <Project Path="Novacollege.WebApi/Novacollege.WebApi.csproj" />
+</Solution>
