@@ -1,4 +1,4 @@
-@Novacollege.WebApi_HostAddress = https://localhost:58754
+@Novacollege.WebApi_HostAddress = https://localhost:64014
 @encodedCredentials = YWRtaW46YWRtaW4xMjM=
 
 GET {{Novacollege.WebApi_HostAddress}}/provincias/summary

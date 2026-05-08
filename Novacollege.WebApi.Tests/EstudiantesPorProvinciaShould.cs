@@ -6,7 +6,7 @@ using Testcontainers.MsSql;
 
 namespace Novacollege.WebApi.Tests;
 
-public class EstudiantesProProvinciaShould : IAsyncLifetime
+public class EstudiantesPorProvinciaShould : IAsyncLifetime
 {
     private readonly MsSqlContainer _msSqlContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2022-latest")

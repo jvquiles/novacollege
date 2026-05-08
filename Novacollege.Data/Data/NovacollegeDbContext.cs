@@ -22,6 +22,15 @@ public class NovacollegeDbContext(
         .FromSqlRaw("EXEC sp_ObtenerEstudiantesPorProvincia")
         .ToListAsync();
 
+    public async Task<ProvinciaPorCurso?> ObtenerProvinciasConMasEstudiantesPorCurso(
+        int idCurso)
+    {
+        var result = await Set<ProvinciaPorCurso>()
+            .FromSqlInterpolated($"EXEC sp_ProvinciaConMasEstudiantesPorCurso @IdCurso = {idCurso}")
+            .ToListAsync();
+        return result.FirstOrDefault();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -199,6 +208,9 @@ public class NovacollegeDbContext(
     private static void ModelStoredProcedures(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EstudiantesPorProvincia>()
+            .HasNoKey();
+
+        modelBuilder.Entity<ProvinciaPorCurso>()
             .HasNoKey();
     }
 
