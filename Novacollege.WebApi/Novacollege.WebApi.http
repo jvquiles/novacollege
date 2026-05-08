@@ -1,6 +1,6 @@
-@Novacollege.WebApi_HostAddress = http://localhost:5168
+@Novacollege.WebApi_HostAddress = https://localhost:63419
 
-GET {{Novacollege.WebApi_HostAddress}}/weatherforecast/
+GET {{Novacollege.WebApi_HostAddress}}/provincias/summary
 Accept: application/json
 
 ###

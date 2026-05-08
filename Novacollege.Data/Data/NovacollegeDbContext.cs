@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Novacollege.Data.Entities;
+using Novacollege.Data.StoredProcedures;
 
 namespace Novacollege.Data.Data;
 
@@ -7,14 +8,18 @@ public class NovacollegeDbContext(
     DbContextOptions<NovacollegeDbContext> options)
     : DbContext(options)
 {
-    public DbSet<Provincia> Provincias { get; set; } = null!;
-    public DbSet<Distrito> Distritos { get; set; } = null!;
-    public DbSet<Estudiante> Estudiantes { get; set; } = null!;
-    public DbSet<Profesion> Profesiones { get; set; } = null!;
-    public DbSet<Docente> Docentes { get; set; } = null!;
-    public DbSet<Curso> Cursos { get; set; } = null!;
-    public DbSet<Asignacion> Asignaciones { get; set; } = null!;
-    public DbSet<Matricula> Matriculas { get; set; } = null!;
+    public DbSet<Distrito> Distritos { get; set; }
+    public DbSet<Estudiante> Estudiantes { get; set; }
+    public DbSet<Profesion> Profesiones { get; set; }
+    public DbSet<Docente> Docentes { get; set; }
+    public DbSet<Curso> Cursos { get; set; }
+    public DbSet<Asignacion> Asignaciones { get; set; }
+    public DbSet<Matricula> Matriculas { get; set; }
+    public DbSet<Provincia> Provincias { get; set; }
+
+    public async Task<IList<EstudiantesPorProvincia>> ObtenerEstudiantesPorProvincia() => await Set<EstudiantesPorProvincia>()
+        .FromSqlRaw("EXEC sp_ObtenerEstudiantesPorProvincia")
+        .ToListAsync();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -166,5 +171,8 @@ public class NovacollegeDbContext(
             entity.HasIndex(e => e.IdEstudiante);
             entity.HasIndex(e => e.IdCurso);
         });
+
+        modelBuilder.Entity<EstudiantesPorProvincia>()
+            .HasNoKey();
     }
 }

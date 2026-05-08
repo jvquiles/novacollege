@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Novacollege.Data.Data;
 
@@ -11,9 +12,11 @@ using Novacollege.Data.Data;
 namespace Novacollege.Data.Migrations
 {
     [DbContext(typeof(NovacollegeDbContext))]
-    partial class NovacollegeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260508101543_AddSPProvinciosPorEstudiantes")]
+    partial class AddSPProvinciosPorEstudiantes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
