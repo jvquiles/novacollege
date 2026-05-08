@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Novacollege.Data.Data;
+using Novacollege.WebApi.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<NovacollegeDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("NovaCollege")));
 
+
+builder.Services.AddAuthentication("Basic")
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("Basic", null);
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -17,6 +25,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseDefaultFiles(new DefaultFilesOptions
 {
@@ -31,7 +42,8 @@ app.MapGet("/provincias/summary", (NovacollegeDbContext context) =>
 {
     return context.ObtenerEstudiantesPorProvincia();
 })
-.WithName("GetEstudiantesPorProvincias");
+.WithName("GetEstudiantesPorProvincias")
+.RequireAuthorization();
 
 var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using var scope = serviceScopeFactory.CreateScope();

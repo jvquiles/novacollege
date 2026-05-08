@@ -3,6 +3,7 @@
     <Build />
   </Project>
   <Project Path="Novacollege.Business/Novacollege.Business.csproj" />
+  <Project Path="Novacollege.CrossCuttings/Novacollege.CrossCuttings.csproj" Id="13b1bd2b-d844-4e76-803a-678f490aa6ec" />
   <Project Path="Novacollege.Data/Novacollege.Data.csproj" />
   <Project Path="Novacollege.WebApi.Tests/Novacollege.WebApi.Tests.csproj" Id="e0cb1418-ceda-45cd-8a3f-0c83d574c73e" />
   <Project Path="Novacollege.WebApi/Novacollege.WebApi.csproj" />

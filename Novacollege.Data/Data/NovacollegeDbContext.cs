@@ -16,6 +16,7 @@ public class NovacollegeDbContext(
     public DbSet<Asignacion> Asignaciones { get; set; }
     public DbSet<Matricula> Matriculas { get; set; }
     public DbSet<Provincia> Provincias { get; set; }
+    public DbSet<Usuario> Usuarios { get; set; }
 
     public async Task<IList<EstudiantesPorProvincia>> ObtenerEstudiantesPorProvincia() => await Set<EstudiantesPorProvincia>()
         .FromSqlRaw("EXEC sp_ObtenerEstudiantesPorProvincia")
@@ -172,7 +173,49 @@ public class NovacollegeDbContext(
             entity.HasIndex(e => e.IdCurso);
         });
 
+        ModelStoredProcedures(modelBuilder);
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.ToTable("TB_USUARIO");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Username)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.PasswordHash)
+                .IsRequired()
+                .HasMaxLength(256);
+            entity.Property(e => e.Nombre)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.FechaCreacion)
+                .IsRequired();
+            entity.HasIndex(e => e.Username).IsUnique();
+        });
+
+        SeedData(modelBuilder);
+    }
+
+    private static void ModelStoredProcedures(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<EstudiantesPorProvincia>()
             .HasNoKey();
+    }
+
+    private static void SeedData(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Usuario>().HasData(
+            new Usuario
+            {
+                Id = 1,
+                Username = "admin",
+                PasswordHash = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+                Nombre = "Administrador",
+                FechaCreacion = new DateTimeOffset(
+                    2026, 5, 8,
+                    12, 0, 0,
+                    TimeSpan.Zero)
+            }
+        );
     }
 }

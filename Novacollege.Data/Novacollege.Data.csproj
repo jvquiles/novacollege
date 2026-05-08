@@ -23,4 +23,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Novacollege.CrossCuttings\Novacollege.CrossCuttings.csproj" />
+  </ItemGroup>
+
 </Project>
