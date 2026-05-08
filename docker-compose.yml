@@ -1,0 +1,18 @@
+services:
+  novacollege.webapi:
+    image: ${DOCKER_REGISTRY-}novacollegewebapi
+    build:
+      context: .
+      dockerfile: Novacollege.WebApi/Dockerfile
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    restart: unless-stopped
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Your_password123"
