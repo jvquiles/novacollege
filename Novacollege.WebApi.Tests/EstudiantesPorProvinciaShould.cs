@@ -63,7 +63,7 @@ public class EstudiantesPorProvinciaShould : IAsyncLifetime
         var estudianteFaker = new Faker<Estudiante>()
             .RuleFor(e => e.ApelEst, f => f.Person.LastName)
             .RuleFor(e => e.NombEst, f => f.Person.FirstName)
-            .RuleFor(e => e.FnacEst, f => f.Date.Past(25))
+            .RuleFor(e => e.FnacEst, f => DateOnly.FromDateTime(f.Date.Past(25)))
             .RuleFor(e => e.SexoEst, f => f.PickRandom(new[] { "M", "F" }))
             .RuleFor(e => e.DireEst, f => f.Address.StreetAddress())
             .RuleFor(e => e.TcolEst, f => f.Phone.PhoneNumber("##########"))

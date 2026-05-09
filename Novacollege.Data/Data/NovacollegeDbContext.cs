@@ -229,5 +229,22 @@ public class NovacollegeDbContext(
                     TimeSpan.Zero)
             }
         );
+
+        modelBuilder.Entity<Provincia>().HasData(
+            new Provincia
+            {
+                Id = 1,
+                NombPro = "Valencia"
+            }
+        );
+
+        modelBuilder.Entity<Distrito>().HasData(
+            new Distrito
+            {
+                Id = 1,
+                NombDis = "Distrito 1",
+                IdProvincia = 1
+            }
+        );
     }
 }

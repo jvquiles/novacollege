@@ -1,6 +1,23 @@
-@Novacollege.WebApi_HostAddress = https://localhost:64014
+@Novacollege.WebApi_HostAddress = https://localhost:63187
 @encodedCredentials = YWRtaW46YWRtaW4xMjM=
 
+### get provincias/summary
 GET {{Novacollege.WebApi_HostAddress}}/provincias/summary
 Accept: application/json
 Authorization: Basic {{encodedCredentials}}
+
+### post /estudiantes
+POST {{Novacollege.WebApi_HostAddress}}/estudiantes
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{encodedCredentials}}
+{
+    "apelEst": "Pérez",
+    "nombEst": "Juan",
+    "fnacEst": "1988-05-01",
+    "sexoEst": "M",
+    "direEst": "Av. Central 123",
+    "tcolEst": "22334455",
+    "ginsEst": "2024-01-10",
+    "idDistrito": 1
+}

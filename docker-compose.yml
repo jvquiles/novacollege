@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: Novacollege.WebApi/Dockerfile
+    ports:
+      - "63186:8081"
+      - "63187:8081"
     depends_on:
       - sqlserver
 

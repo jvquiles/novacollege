@@ -8,9 +8,9 @@ public class Estudiante
 
     public string NombEst { get; set; } = string.Empty;
 
-    public DateTimeOffset FnacEst { get; set; }
+    public DateOnly? FnacEst { get; set; }
 
-    public string SexoEst { get; set; } = string.Empty;
+    public string? SexoEst { get; set; }
 
     public string? DireEst { get; set; }
 
