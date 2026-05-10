@@ -45,14 +45,32 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser"))
 });
 
-app.MapGet("/provincias/summary", async (
+// Endpoint para: Obtener las diferentes provincias a las que pertenecen los estudiantes y el número de estudiantes de cada provincia (SQL) 
+app.MapGet("/provincias/info", async (
     NovacollegeDbContext context) =>
 {
     return await context.ObtenerEstudiantesPorProvincia();
 })
-.WithName("GetEstudiantesPorProvincias")
+.WithName("GetProvinciasInfo")
 .RequireAuthorization();
 
+// Endpoint para: Obtener la provincia que tiene más estudiantes en el curso (curso debe ser un parámetro del procedimiento)
+// y posteriormente como se ejecutaría en sqlserver ese procedimiento. 
+app.MapGet("/provincias/curso/{id:int}/estudiantes", async (
+    NovacollegeDbContext context,
+    [FromRoute]int id) =>
+{
+    var provincia = await context.ObtenerProvinciasConMasEstudiantesPorCurso(id);
+    
+    if (provincia == null)
+        return Results.NotFound($"Curso con ID {id} no encontrado");
+
+    return Results.Ok(provincia);
+})
+.WithName("GetEstudiantesPorCurso")
+.RequireAuthorization();
+
+// Endpoint para: Insertar estudiantes
 app.MapPost("/estudiantes", async (
     NovacollegeDbContext context,
     IValidator<CreateEstudianteRequest> validator,
@@ -81,6 +99,11 @@ app.MapPost("/estudiantes", async (
 })
 .WithName("CreateEstudiante")
 .RequireAuthorization();
+
+// Endpoint para: Api que obtenga los datos y por LINQ haga lo siguiente: Tener una lista que por docente
+//nos de una lista de Información de Cursos , y para cada curso tengamos el listado de
+//provincias en las que tiene alumnos y para cada provincia la información de alumnos. El
+//objetivo es utilizar lo menos posible sentencias while , for o foreach. 
 
 var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using var scope = serviceScopeFactory.CreateScope();
