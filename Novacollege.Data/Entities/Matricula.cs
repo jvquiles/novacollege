@@ -8,7 +8,7 @@ public class Matricula
 
     public int IdEstudiante { get; set; }
 
-    public Estudiante? Estudiante { get; set; } = null!;
+    public Estudiante Estudiante { get; set; } = null!;
 
     public int IdCurso { get; set; }
 

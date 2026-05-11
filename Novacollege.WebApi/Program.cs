@@ -7,7 +7,6 @@ using Novacollege.Data.Data;
 using Novacollege.Data.Entities;
 using Novacollege.WebApi.Authentication;
 using Novacollege.WebApi.Dtos;
-using Novacollege.WebApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -157,6 +156,53 @@ app.MapGet("/estudiantes", async (
 })
 .WithName("GetEstudiantesFiltrados")
 .RequireAuthorization();
+
+// Endpoint para: Api que obtenga los datos y por LINQ haga lo siguiente: Tener una lista que por docente
+// nos de una lista de Información de Cursos , y para cada curso tengamos el listado de
+// provincias en las que tiene alumnos y para cada provincia la información de alumnos. El
+// objetivo es utilizar lo menos posible sentencias while, for o foreach. 
+app.MapGet("/docentes", async (NovacollegeDbContext context) =>
+{
+    var result = await context.Asignaciones
+        .AsSplitQuery()
+        .Include(a => a.Docente)
+        .Include(a => a.Curso)
+        .SelectMany(a => context.Matriculas
+            .Include(m => m.Estudiante)
+            .ThenInclude(e => e.Distrito)
+            .ThenInclude(d => d.Provincia)
+            .Select(m => new { Asignacion = a, Matricula = m }))
+        .ToListAsync();
+
+    var grouped = result
+        .GroupBy(x => new { x.Asignacion.Docente!.Id, x.Asignacion.Docente.ApelDoc, x.Asignacion.Docente.NombDoc, x.Asignacion.Curso!.NombCur })
+        .Select(g => new DocenteCursoProvinciaDto
+        {
+            IdDocente = g.Key.Id,
+            ApelDoc = g.Key.ApelDoc,
+            NombDoc = g.Key.NombDoc,
+            NombreCurso = g.Key.NombCur,
+            Provincias = g
+                .Where(x => x.Matricula.Estudiante?.Distrito?.Provincia != null)
+                .GroupBy(x => x.Matricula.Estudiante!.Distrito!.Provincia!.NombPro)
+                .Select(pg => new ProvinciaEstudiantesDto
+                {
+                    NombreProvincia = pg.Key,
+                    NumeroEstudiantes = pg.Count(),
+                    Estudiantes = pg.Select(m => new EstudianteInfoDto
+                    {
+                        Id = m.Matricula.Estudiante!.Id,
+                        ApelEst = m.Matricula.Estudiante.ApelEst,
+                        NombEst = m.Matricula.Estudiante.NombEst
+                    }).ToList()
+                }).ToList()
+        }).ToList();
+
+    return Results.Ok(grouped);
+})
+.WithName("GetDocentesCursosProvincias")
+.RequireAuthorization();
+
 
 var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using var scope = serviceScopeFactory.CreateScope();

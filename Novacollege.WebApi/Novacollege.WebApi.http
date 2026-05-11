@@ -1,4 +1,4 @@
-@Novacollege.WebApi_HostAddress = https://localhost:63187
+@Novacollege.WebApi_HostAddress = http://localhost:5000
 @encodedCredentials = YWRtaW46YWRtaW4xMjM=
 
 ### get provincias/info
@@ -31,4 +31,9 @@ Authorization: Basic {{encodedCredentials}}
 GET {{Novacollege.WebApi_HostAddress}}/estudiantes?idProvincia=1
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic {{encodedCredentials}}
+
+### get /docentes
+GET {{Novacollege.WebApi_HostAddress}}/docentes
+Accept: application/json
 Authorization: Basic {{encodedCredentials}}
