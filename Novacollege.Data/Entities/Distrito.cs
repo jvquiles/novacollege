@@ -8,7 +8,7 @@ public class Distrito
 
     public int IdProvincia { get; set; }
 
-    public Provincia? Provincia { get; set; } = null!;
+    public Provincia Provincia { get; set; } = null!;
 
     public ICollection<Estudiante> Estudiantes { get; set; } = [];
 }

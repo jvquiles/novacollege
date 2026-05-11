@@ -20,7 +20,7 @@ public class Estudiante
 
     public int IdDistrito { get; set; }
 
-    public Distrito? Distrito { get; set; } = null!;
+    public Distrito Distrito { get; set; } = null!;
 
     public ICollection<Matricula> Matriculas { get; set; } = [];
 }

@@ -45,17 +45,25 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser"))
 });
 
-// Endpoint para: Obtener las diferentes provincias a las que pertenecen los estudiantes y el número de estudiantes de cada provincia (SQL) 
+// Endpoint para: Obtener las diferentes provincias a las que pertenecen los estudiantes y el número de
+// estudiantes de cada provincia (SQL)
 app.MapGet("/provincias/info", async (
     NovacollegeDbContext context) =>
 {
-    return await context.ObtenerEstudiantesPorProvincia();
+    var provincias = await context.ObtenerEstudiantesPorProvincia();
+    var provinciasDtos = provincias.Select(p => new ProvinciaInfoResponse
+    {
+        Provincia = p.Provincia,
+        NumeroEstudiantes = p.NumeroEstudiantes
+    }).ToList();
+    return Results.Ok(provinciasDtos);
 })
 .WithName("GetProvinciasInfo")
 .RequireAuthorization();
 
-// Endpoint para: Obtener la provincia que tiene más estudiantes en el curso (curso debe ser un parámetro del procedimiento)
-// y posteriormente como se ejecutaría en sqlserver ese procedimiento. 
+// Endpoint para:  Obtener la provincia que tiene más estudiantes en el curso (curso debe ser un
+// parámetro del procedimiento) y posteriormente como se ejecutaría en sqlserver ese
+// procedimiento
 app.MapGet("/provincias/curso/{id:int}/estudiantes", async (
     NovacollegeDbContext context,
     [FromRoute]int id) =>
@@ -65,12 +73,17 @@ app.MapGet("/provincias/curso/{id:int}/estudiantes", async (
     if (provincia == null)
         return Results.NotFound($"Curso con ID {id} no encontrado");
 
-    return Results.Ok(provincia);
+    var provinciaDto = new ProvinciaInfoResponse
+    {
+        Provincia = provincia.Provincia,
+        NumeroEstudiantes = provincia.NumeroEstudiantes
+    };
+    return Results.Ok(provinciaDto);
 })
 .WithName("GetEstudiantesPorCurso")
 .RequireAuthorization();
 
-// Endpoint para: Insertar estudiantes
+ // Endpoint para: Insertar estudiantes
 app.MapPost("/estudiantes", async (
     NovacollegeDbContext context,
     IValidator<CreateEstudianteRequest> validator,
@@ -95,15 +108,55 @@ app.MapPost("/estudiantes", async (
     context.Estudiantes.Add(estudiante);
     await context.SaveChangesAsync();
 
-    return Results.Created($"/estudiantes/{estudiante.Id}", estudiante);
+    var estudianteDto = new CreateEstudianteResponse()
+    {
+        Id = estudiante.Id,
+        ApelEst = estudiante.ApelEst,
+        NombEst = estudiante.NombEst,
+        FnacEst = estudiante.FnacEst,
+        SexoEst = estudiante.SexoEst,
+        DireEst = estudiante.DireEst,
+        TcolEst = estudiante.TcolEst,
+        GinsEst = estudiante.GinsEst,
+        IdDistrito = estudiante.IdDistrito
+    };
+    return Results.Created($"/estudiantes/{estudiante.Id}", estudianteDto);
 })
 .WithName("CreateEstudiante")
 .RequireAuthorization();
 
-// Endpoint para: Api que obtenga los datos y por LINQ haga lo siguiente: Tener una lista que por docente
-//nos de una lista de Información de Cursos , y para cada curso tengamos el listado de
-//provincias en las que tiene alumnos y para cada provincia la información de alumnos. El
-//objetivo es utilizar lo menos posible sentencias while , for o foreach. 
+// Endpoint para: Nos devuelva los estudiantes de una provincia (objetivo filtros api)
+app.MapGet("/estudiantes", async (
+    NovacollegeDbContext context,
+    [FromQuery] int? idProvincia) =>
+{
+    IQueryable<Estudiante> query = context.Estudiantes
+        .AsSplitQuery()
+        .Include(e => e.Distrito)
+        .ThenInclude(d => d!.Provincia);
+
+    if (idProvincia.HasValue)
+    {
+        query = query.Where(e => e.Distrito!.Provincia!.Id == idProvincia.Value);
+    }
+
+    var estudiantes = await query.ToListAsync();
+    var estudiantesDto = estudiantes.Select(e => new CreateEstudianteResponse()
+    {
+        Id = e.Id,
+        ApelEst = e.ApelEst,
+        NombEst = e.NombEst,
+        FnacEst = e.FnacEst,
+        SexoEst = e.SexoEst,
+        DireEst = e.DireEst,
+        TcolEst = e.TcolEst,
+        GinsEst = e.GinsEst,
+        IdDistrito = e.IdDistrito
+    }).ToList();
+    return Results.Ok(estudiantesDto);
+})
+.WithName("GetEstudiantesFiltrados")
+.RequireAuthorization();
 
 var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using var scope = serviceScopeFactory.CreateScope();

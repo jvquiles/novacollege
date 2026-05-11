@@ -26,3 +26,9 @@ Authorization: Basic {{encodedCredentials}}
     "ginsEst": "2024-01-10",
     "idDistrito": 1
 }
+
+### get /estudiantes?idProvincia
+GET {{Novacollege.WebApi_HostAddress}}/estudiantes?idProvincia=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{encodedCredentials}}
