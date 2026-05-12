@@ -4,7 +4,7 @@ using Novacollege.Data.Data;
 using Novacollege.Data.Entities;
 using Testcontainers.MsSql;
 
-namespace Novacollege.WebApi.Tests;
+namespace Novacollege.WebApi.Tests.Integration;
 
 public class ProvinciaPorCursoShould : IAsyncLifetime
 {

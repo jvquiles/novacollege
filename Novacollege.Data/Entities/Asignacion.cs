@@ -8,9 +8,9 @@ public class Asignacion
 
     public int IdCurso { get; set; }
 
-    public Curso? Curso { get; set; } = null!;
+    public Curso Curso { get; set; } = null!;
 
     public int IdDocente { get; set; }
 
-    public Docente? Docente { get; set; } = null!;
+    public Docente Docente { get; set; } = null!;
 }
