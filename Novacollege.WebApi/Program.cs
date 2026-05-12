@@ -35,10 +35,6 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseDefaultFiles(new DefaultFilesOptions
-{
-    DefaultFileNames = ["index.html"]
-});
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser"))
@@ -243,7 +239,6 @@ app.MapGet("/docentes", async (NovacollegeDbContext context) =>
 })
 .WithName("GetDocentesCursosProvincias")
 .RequireAuthorization();
-
 
 var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using var scope = serviceScopeFactory.CreateScope();
