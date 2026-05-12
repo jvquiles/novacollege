@@ -1,6 +1,8 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, Component } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { UserSettingsComponent } from './user-settings/user-settings';
+import { UsersComponent } from './users/users';
 
 @Component({
   selector: 'app-home',
@@ -21,9 +23,11 @@ export class HomeComponent { }
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient(),
     provideRouter([
       { path: '', component: HomeComponent },
-      { path: 'user-settings', component: UserSettingsComponent }
+      { path: 'user-settings', component: UserSettingsComponent },
+      { path: 'users', component: UsersComponent }
     ])
   ]
 };
