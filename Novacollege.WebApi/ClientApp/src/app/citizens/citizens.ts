@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap, map } from 'rxjs';
 
 interface User {
   id: string;
   name: string;
+  cityId: number;
 }
 
 interface City {
@@ -28,6 +29,7 @@ interface Citizen {
     <div class="container">
       <h1>Citizens</h1>
       <button (click)="loadData()">Load users in cities</button>
+      <button (click)="loadDataFilteringByCity()">Load users in cities filtering by city</button>
       
       @if (data()) {
         <ul>
@@ -77,15 +79,45 @@ export class CitizensComponent {
     forkJoin([users$, cities$]).subscribe({
       next: ([users, cities]) => {
         const noviCity = cities.find(c => c.country === 'Belgium');
-        const citizens = users.map(user => ({
+        const citizen = users.map(user => ({
           user,
           city: noviCity
         }));
-        this.data.set(citizens);
+        this.data.set(citizen);
       },
       error: (err) => {
         console.log('Failed to load data', err);
       }
     });
+  }
+
+  // 2. En el caso de que necesitemos primero obtener el id de usuario para luego enviar una
+  // consulta al mismo endpoint de cities para obtener las ciudades por id de usuario, ¿cómo lo
+  // implementarías en tu código para primero llamar a una api y luego a otra con el resultado de la
+  // primera?(cuando obtengas los usuarios, asume que todos viven en Belgium)
+  loadDataFilteringByCity() {
+  this.http.get<User[]>('https://646b8fc77d3c1cae4ce3ffe0.mockapi.io/commonapi/users')
+      .pipe(
+        switchMap(users => {
+          const cityRequests = users.map(user =>
+            this.http.get<City>(`https://646b8fc77d3c1cae4ce3ffe0.mockapi.io/commonapi/cities/${user.id}`) // WARNING: Using user id just for demo purposes, not suitable for business apps
+              .pipe(
+                map(city => ({
+                  user,
+                  city: city
+                } as Citizen))
+              )
+          );
+          return forkJoin(cityRequests);
+        })
+      )
+      .subscribe({
+        next: (citizens) => {
+          this.data.set(citizens);
+        },
+        error: (err) => {
+          console.log(`Failed: ${err}`);
+        }
+      });
   }
 }
