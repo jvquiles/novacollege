@@ -8,9 +8,9 @@ import { UserInfoComponent, UserInfo } from '../user-info/user-info';
   template: `
     <div class="settings-container">
       <h1>User Settings</h1>
-      <app-user-info [userInfo]="detailView"/>
-      <button (click)="increase()">Increase age</button>
-      <button (click)="decrease()">Decrease age</button>
+      <app-user-info [(userInfo)]="detailView"/>
+      <button (click)="increaseAge()">Increase age from parent</button>
+      <button (click)="decreaseAge()">Decrease age from parent</button>
     </div>
   `,
   styles: [`
@@ -22,19 +22,36 @@ import { UserInfoComponent, UserInfo } from '../user-info/user-info';
     }
     button {
       margin-top: 1rem;
+      margin-right: 0.5rem;
       padding: 0.5rem 1rem;
       cursor: pointer;
     }
   `]
 })
 export class UserSettingsComponent {
-  detailView = new UserInfo();
+  private _detailView = new UserInfo();
 
-  increase() {
-    this.detailView.age++;
+  get detailView(): UserInfo {
+    return this._detailView;
   }
 
-  decrease() {
-    this.detailView.age--;
+  set detailView(value: UserInfo) {
+    this._detailView = value;
+    this.onDetailViewChanged(value);
+  }
+
+  // Utilizando los componentes implementados en el ejercicio 1, crear una función en el
+  // componente hijo para incrementar la edad de un usuario. Mostrar la nueva edad en el
+  // componente padre mediante un console.log.
+  private onDetailViewChanged(value: UserInfo) {
+    console.log('detailView changed from child:', value);
+  }
+
+  increaseAge() {
+    this._detailView.age++;
+  }
+
+  decreaseAge() {
+    this._detailView.age--;
   }
 }

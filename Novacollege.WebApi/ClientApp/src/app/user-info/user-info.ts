@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-user-info',
@@ -8,6 +8,8 @@ import { Component, Input } from '@angular/core';
     <div class="settings-container">
       <h2>User Info</h2>
       <p>{{ userInfo.name }} has ({{ userInfo.age }} years old)</p>
+      <button (click)="increaseAge()">Increase age from child</button>
+      <button (click)="decreaseAge()">Decrease age from child</button>
     </div>
   `,
   styles: [`
@@ -32,18 +34,27 @@ export class UserInfoComponent {
     }
   }
 
-  get userInfo(): UserInfo
-  {
+  get userInfo(): UserInfo {
     return this._userInfo;
   }
 
+  @Output() userInfoChange = new EventEmitter<UserInfo>();
   private onUserInfoChange() {
     console.log('userInfo changed to:', this._userInfo);
   }
+
+  increaseAge() {
+    this.userInfo.age++;
+    this.userInfoChange.emit(this._userInfo);
+  }
+
+  decreaseAge() {
+    this.userInfo.age--;
+    this.userInfoChange.emit(this._userInfo);
+  }
 }
 
-export class UserInfo
-{
+export class UserInfo {
   name: string = 'John Doe';
   age: number = 30;
 }
