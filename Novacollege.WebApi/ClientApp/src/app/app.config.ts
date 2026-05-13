@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { UserSettingsComponent } from './user-settings/user-settings';
 import { UsersComponent } from './users/users';
+import { CitizensComponent } from './citizens/citizens';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter([
       { path: '', component: HomeComponent },
       { path: 'user-settings', component: UserSettingsComponent },
-      { path: 'users', component: UsersComponent }
+      { path: 'users', component: UsersComponent },
+      { path: 'citizens', component: CitizensComponent }
     ])
   ]
 };

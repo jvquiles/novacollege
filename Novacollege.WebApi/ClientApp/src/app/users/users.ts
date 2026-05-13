@@ -43,7 +43,6 @@ interface User {
     }
     ul {
       list-style: none;
-      padding: 0;
     }
     li {
       padding: 0.5rem;
