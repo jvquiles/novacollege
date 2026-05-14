@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { UserSettingsComponent } from './user-settings/user-settings';
 import { UsersComponent } from './users/users';
 import { CitizensComponent } from './citizens/citizens';
+import { ElementOrderingComponent } from './elementordering/elementordering';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +30,8 @@ export const appConfig: ApplicationConfig = {
       { path: '', component: HomeComponent },
       { path: 'user-settings', component: UserSettingsComponent },
       { path: 'users', component: UsersComponent },
-      { path: 'citizens', component: CitizensComponent }
+      { path: 'citizens', component: CitizensComponent },
+      { path: 'elementordering', component: ElementOrderingComponent }
     ])
   ]
 };
