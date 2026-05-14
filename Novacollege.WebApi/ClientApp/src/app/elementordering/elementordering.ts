@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// ¿Cómo harías, mediante css, para colocar el primer div debajo del segundo div ?
+// ¿Cómo harías, mediante css, para colocar el primer div debajo del segundo div?
 @Component({
   selector: 'app-elementordering',
   standalone: true,

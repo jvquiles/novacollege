@@ -91,7 +91,7 @@ export class CitizensComponent {
     });
   }
 
-  // 2. En el caso de que necesitemos primero obtener el id de usuario para luego enviar una
+  // En el caso de que necesitemos primero obtener el id de usuario para luego enviar una
   // consulta al mismo endpoint de cities para obtener las ciudades por id de usuario, ¿cómo lo
   // implementarías en tu código para primero llamar a una api y luego a otra con el resultado de la
   // primera?(cuando obtengas los usuarios, asume que todos viven en Belgium)
